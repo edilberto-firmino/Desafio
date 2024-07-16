@@ -1,0 +1,38 @@
+version: '3'
+services:
+  # PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - laravel
+    environment:
+      # Define as variáveis de ambiente necessárias para o Laravel
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+  # MySQL Service
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel_user
+      MYSQL_PASSWORD: your_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    networks:
+      - laravel
+
+networks:
+  laravel:
+    driver: bridge
